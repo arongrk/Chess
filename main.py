@@ -3,6 +3,21 @@ from pygame import *
 import time
 
 
+def plist(screen, color):
+    if color == 'w':
+        return [Pawn(screen, color, i, 7) for i in range(1, 9)]
+    if color == 'b':
+        return [Pawn(screen, color, i, 2) for i in range(1, 9)]
+
+
+def draw_figure(images, x, y, color, screen):
+    if color == 'b':
+        screen.blit(images[1], (x, y))
+    if color == 'w':
+        screen.blit(images[0], (x, y))
+    pygame.display.flip()
+
+
 class Board:
     def __init__(self, screen):
         self.screen = screen
@@ -12,6 +27,20 @@ class Board:
         self.screen.fill((255, 255, 255))
         self.screen.blit(self.board, (0, 0))
         pygame.display.flip()
+
+
+class Bishop:
+    def __init__(self, screen, color, x, y):
+        self.screen = screen
+        self.B = pygame.image.load('resources/bishop_b.png').convert_alpha()
+        self.W = pygame.image.load('resources/bishop_k.png').convert_alpha()
+        self.color = color
+        self.x = (x-1) * 60
+        self.y = (y-1) * 60
+
+
+    def draw(self):
+        draw_figure([self.W, self.B], self.x, self.y, self.color, self.screen)
 
 
 class Knight:
@@ -24,11 +53,7 @@ class Knight:
         self.y = (y-1) * 60
 
     def draw(self):
-        if self.color == 'b':
-            self.screen.blit(self.B, (self.x, self.y))
-        if self.color == 'w':
-            self.screen.blit(self.W, (self.x, self.y))
-        pygame.display.flip()
+        draw_figure([self.W, self.B], self.x, self.y, self.color, self.screen)
 
 
 class Pawn:
@@ -49,39 +74,38 @@ class Pawn:
 
 
 class Game:
+    surface = pygame.display.set_mode((700, 485))
+    board = Board(surface)
     def __init__(self):
-        self.surface = pygame.display.set_mode((700, 485))
-        self.board = Board(self.surface)
-        self.wqk = Knight(self.surface, 'w', 2, 8)
-        self.wAp = Pawn(self.surface, 'w', 1, 7)
-        self.wBp = Pawn(self.surface, 'w', 2, 7)
-        self.wCp = Pawn(self.surface, 'w', 3, 7)
-        self.wDp = Pawn(self.surface, 'w', 4, 7)
-        self.wEp = Pawn(self.surface, 'w', 5, 7)
-        self.wFp = Pawn(self.surface, 'w', 6, 7)
-        self.wGp = Pawn(self.surface, 'w', 7, 7)
-        self.wHp = Pawn(self.surface, 'w', 8, 7)
-
+        self.wKnights = self.wQk, self.wKk = [Knight(self.surface, 'w', i, 8) for i in [2, 7]]
+        self.wPawns = self.wA, self.wB, self.wC, self.wD, self.wE, self.wF, self.wG, self.wH = plist(self.surface, 'w')
+        self.wBishops = self.wQb, self.wKb = [Bishop(self.surface, 'w', i, 8) for i in [3, 6]]
+        self.wRooks
+        self.wQueen
+        self.wKing
+        self.wFigures = self.wPawns + self.wKnights + self.wBishops + self.wRooks + self.wQueen + self.wKing
 
     def draw_all(self):
-        self.wAp.draw()
-        self.wBp.draw()
-        self.wCp.draw()
-        self.wDp.draw()
-        self.wEp.draw()
-        self.wFp.draw()
-        self.wGp.draw()
-        self.wHp.draw()
-
+        for i in self.wFigures:
+            i.draw()
+        pass
+    #     self.wAp.draw()
+    #     self.wBp.draw()
+    #     self.wCp.draw()
+    #     self.wDp.draw()
+    #     self.wEp.draw()
+    #     self.wFp.draw()
+    #     self.wGp.draw()
+    #     self.wHp.draw()
 
     def run(self):
         self.board.draw()
-        self.wqk.draw()
         self.draw_all()
 
 
 
 if __name__ == '__main__':
     game = Game()
+    gamer = Game()
     game.run()
     time.sleep(5)
