@@ -55,7 +55,6 @@ class Bishop:
         self.x = (x-1) * 60
         self.y = (y-1) * 60
 
-
     def draw(self):
         draw_figure([self.W, self.B], self.x, self.y, self.color, self.screen)
 
@@ -73,24 +72,64 @@ class Knight:
         draw_figure([self.W, self.B], self.x, self.y, self.color, self.screen)
 
 
+class Rook:
+    def __init__(self, screen, c, x, y):
+        self.screen = screen
+        self.B = pygame.image.load('resources/rook_b.png').convert_alpha()
+        self.W = pygame.image.load('resources/rook_w.png').convert_alpha()
+        self.color = c
+        self.x = (x - 1) * 60
+        self.y = (y - 1) * 60
+
+    def draw(self):
+        draw_figure([self.W, self.B], self.x, self.y, self.color, self.screen)
+
+
+class Queen:
+    def __init__(self, screen, c, x, y):
+        self.screen = screen
+        self.B = pygame.image.load('resources/queen_b.png').convert_alpha()
+        self.W = pygame.image.load('resources/queen_w.png').convert_alpha()
+        self.color = c
+        self.x = (x-1) * 60
+        self.y = (y-1) * 60
+
+    def draw(self):
+        draw_figure([self.W, self.B], self.x, self.y, self.color, self.screen)
+
+
+class King:
+    def __init__(self, screen, c, x, y):
+        self.screen = screen
+        self.B = pygame.image.load('resources/king_b.png').convert_alpha()
+        self.W = pygame.image.load('resources/king_w.png').convert_alpha()
+        self.color = c
+        self.x = (x-1) * 60
+        self.y = (y-1) * 60
+
+    def draw(self):
+        draw_figure([self.W, self.B], self.x, self.y, self.color, self.screen)
+
+
 class Game:
     surface = pygame.display.set_mode((700, 480))
     board = Board(surface)
+
     def __init__(self):
         self.wPawns = self.wA, self.wB, self.wC, self.wD, self.wE, self.wF, self.wG, self.wH = plist(self.surface, 'w')
         self.wKnights = self.wQk, self.wKk = [Knight(self.surface, 'w', i, 8) for i in [2, 7]]
         self.wBishops = self.wQb, self.wKb = [Bishop(self.surface, 'w', i, 8) for i in [3, 6]]
-        self.wRooks = 0
-        self.wQueen = 0
-        self.wKing = 0
-        self.wFigures = self.wPawns + self.wBishops + self.wKnights # + self.wRooks + self.wQueen + self.wKing
+        self.wRooks = self.wQr, self.wKr = [Rook(self.surface, 'w', i, 8) for i in [1, 8]]
+        self.wQueen = [Queen(self.surface, 'w', 4, 8), ]
+        self.wKing = [King(self.surface, 'w', 5, 8), ]
+        self.wFigures = self.wPawns + self.wBishops + self.wKnights + self.wRooks + self.wQueen + self.wKing
         self.bPawns = self.bA, self.bB, self.bC, self.bD, self.bE, self.bF, self.bG, self.bH = plist(self.surface, 'b')
         self.bKnights = self.bQk, self.bKk = [Knight(self.surface, 'b', i, 1) for i in [2, 7]]
         self.bBishops = self.bQb, self.bKb = [Bishop(self.surface, 'b', i, 1) for i in [3, 6]]
-        self.bRooks = 0
-        self.bQueen = 0
-        self.bKing = 0
-        self.bFigures = self.bPawns + self.bBishops + self.bKnights # + self.bRooks + self.bQueen + self.bKing
+        self.bRooks = self.wQr, self.wKr = [Rook(self.surface, 'b', i, 1) for i in [1, 8]]
+        self.bQueen = [Queen(self.surface, 'b', 4, 1), ]
+        self.bKing = [King(self.surface, 'b', 5, 1), ]
+        self.bFigures = self.bPawns + self.bBishops + self.bKnights + self.bRooks + self.bQueen + self.bKing
 
     def draw_all(self):
         for i in self.wFigures + self.bFigures:
